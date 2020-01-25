@@ -1,0 +1,571 @@
+{
+  "id": "se.emilohman.nibe",
+  "version": "0.0.1",
+  "compatibility": ">=2.1.2",
+  "sdk": 2,
+  "brandColor": "#A81525",
+  "name": {
+    "en": "Nibe"
+  },
+  "description": {
+    "en": "Adds support for Nibe heat pumps."
+  },
+  "tags": {
+    "en": [ "nibe", "heat pump", "climte" ]
+  },
+  "category": [
+    "climate"
+  ],
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Emil Öhman",
+    "email": "emilohman@gmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Emil Öhman",
+        "email": "emilohman@gmail.com"
+      }
+    ]
+  },
+  "capabilities": {
+    "speed": {
+      "type": "number",
+      "title": {
+        "en": "Speed"
+      },
+      "uiComponent": "sensor",
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "%"
+      },
+      "icon": "/assets/velocity.svg"
+    },
+    "percentage": {
+      "type": "number",
+      "title": {
+        "en": "Percent"
+      },
+      "uiComponent": "sensor",
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "%"
+      },
+      "icon": "/assets/percentage.svg"
+    },
+    "degree_minutes": {
+      "type": "number",
+      "title": {
+        "en": "Degree minutes",
+        "sv": "Gradminuter"
+      },
+      "uiComponent": "sensor",
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "DM",
+        "sv": "GM"
+      },
+      "icon": "/assets/degree_minutes.svg"
+    },
+    "blocked": {
+      "type": "boolean",
+      "title": {
+        "en": "Blocked",
+        "sv": "Blockerad"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/blocked.svg"
+    },
+    "counter": {
+      "type": "number",
+      "title": {
+        "en": "Starts",
+        "sv": "Starter"
+      },
+      "uiComponent": "sensor",
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/counter.svg"
+    },
+    "time": {
+      "type": "number",
+      "title": {
+        "en": "Time",
+        "sv": "Tid"
+      },
+      "uiComponent": "sensor",
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "h",
+        "sv": "h"
+      },
+      "icon": "/assets/time.svg"
+    },
+    "frequency": {
+      "type": "number",
+      "title": {
+        "en": "Time",
+        "sv": "Tid"
+      },
+      "uiComponent": "sensor",
+      "chartType": "spline",
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "hz",
+        "sv": "hz"
+      },
+      "icon": "/assets/frequency.svg"
+    }
+  },
+  "drivers": [
+    {
+      "id": "nibe",
+      "name": {
+        "en": "Nibe",
+        "sv": "Nibe"
+      },
+      "class": "heater",
+      "capabilities": [
+        "onoff.dummy",
+        "onoff.hot_water_boost",
+        "onoff.ventilation_boost",
+        "measure_temperature.outside",
+        "measure_temperature.avg_outside",
+        "measure_temperature.inside",
+        "measure_temperature.hot_water_top",
+        "measure_temperature.hot_water_charging",
+        "degree_minutes",
+        "speed.fan",
+        "measure_temperature.ventilation_exhaust_air",
+        "measure_temperature.ventilation_extract_air",
+        "counter.defrosting_reference_air_velocity_sensor",
+        "counter.defrosting_value_air_velocity_sensor",
+        "percentage.defrosting_decrease_from_reference",
+        "blocked.compressor",
+        "speed.pump_speed_heating_medium",
+        "measure_temperature.condenser_out",
+        "measure_temperature.condenser_return",
+        "measure_temperature.evaporator",
+        "measure_temperature.hot_gas",
+        "measure_temperature.liquid_line",
+        "measure_temperature.suction_gas",
+        "time.compressor_operating",
+        "time.compressor_operating_hot_water",
+        "frequency.allowed_compressor",
+        "frequency.allowed_compressor_min",
+        "frequency.current_compressor",
+        "blocked.addition",
+        "measure_current.addition_fuse_size",
+        "time.addition_time_factor",
+        "measure_power.addition_electrical_addition_power",
+        "measure_power.addition_set_max_electrical_add",
+        "blocked.external",
+        "measure_temperature.calculated_flow_temp",
+        "measure_temperature.heat_medium_flow",
+        "counter.compressor_starts",
+        "measure_current.phase_1",
+        "measure_current.phase_2",
+        "measure_current.phase_3",
+        "alarm_generic.system"
+      ],
+      "capabilitiesOptions": {
+        "onoff.hot_water_boost": {
+          "title": "Hot water boost"
+        },
+        "onoff.ventilation_boost": {
+          "title": "Ventilation boost"
+        },
+        "measure_temperature.outside": {
+          "title": {
+            "en": "Outdoor temp",
+            "sv": "Utetemperatur"
+          }
+        },
+        "measure_temperature.avg_outside": {
+          "title": {
+            "en": "Average outdoor temp",
+            "sv": "Medelutetemperatur"
+          }
+        },
+        "measure_temperature.hot_water_top": {
+          "title": {
+            "en": "Hot water top",
+            "sv": "Varmvatten topp"
+          }
+        },
+        "measure_temperature.hot_water_charging": {
+          "title": {
+            "en": "Hot water charging",
+            "sv": "Varmvatten laddning"
+          }
+        },
+        "measure_temperature.inside": {
+          "title": {
+            "en": "Room temp",
+            "sv": "Rumstemperatur"
+          }
+        },
+        "speed.fan": {
+          "title": {
+            "en": "Ventilation fan speed",
+            "sv": "Ventilation fläkthastighet"
+          }
+        },
+        "measure_temperature.ventilation_exhaust_air": {
+          "title": {
+            "en": "Ventilation exhaust air",
+            "sv": "Ventilation frånluft"
+          }
+        },
+        "measure_temperature.ventilation_extract_air": {
+          "title": {
+            "en": "Ventilation extract air",
+            "sv": "Ventilation avluft"
+          }
+        },
+        "counter.defrosting_reference_air_velocity_sensor": {
+          "title": {
+            "en": "Defrosting reference air velocity sensor",
+            "sv": "Avfrostning referens lufthastighetsgivare"
+          }
+        },
+        "counter.defrosting_value_air_velocity_sensor": {
+          "title": {
+            "en": "Defrosting value air velocity sensor",
+            "sv": "Avfrostning värde lufthastighetsgivare"
+          }
+        },
+        "percentage.defrosting_decrease_from_reference": {
+          "title": {
+            "en": "Defrosting decrease from reference",
+            "sv": "Avfrostning minskning från referensvärde"
+          }
+        },
+        "blocked.compressor": {
+          "title": {
+            "en": "Compressor blocked",
+            "sv": "Kompressor blockerad"
+          }
+        },
+        "speed.pump_speed_heating_medium": {
+          "title": {
+            "en": "Pump speed heating medium",
+            "sv": "Värmebärarpumphastighet"
+          }
+        },
+        "measure_temperature.condenser_out": {
+          "title": {
+            "en": "Condenser out",
+            "sv": "Kondensor fram"
+          }
+        },
+        "measure_temperature.condenser_return": {
+          "title": {
+            "en": "Condenser return",
+            "sv": "Kondensor retur"
+          }
+        },
+        "measure_temperature.evaporator": {
+          "title": {
+            "en": "Evaporator",
+            "sv": "Förångare"
+          }
+        },
+        "measure_temperature.hot_gas": {
+          "title": {
+            "en": "Hot gas",
+            "sv": "Hetgas"
+          }
+        },
+        "measure_temperature.liquid_line": {
+          "title": {
+            "en": "Liquid line",
+            "sv": "Vätskeledning"
+          }
+        },
+        "measure_temperature.suction_gas": {
+          "title": {
+            "en": "Suction gas",
+            "sv": "Suggas"
+          }
+        },
+        "time.compressor_operating": {
+          "title": {
+            "en": "Compressor operating time",
+            "sv": "Kompressor drifttid"
+          }
+        },
+        "time.compressor_operating_hot_water": {
+          "title": {
+            "en": "Compressor operating time hot water",
+            "sv": "Kompressor drifttid varmvatten"
+          }
+        },
+        "frequency.allowed_compressor": {
+          "title": {
+            "en": "Allowed compressor frequency",
+            "sv": "Tillåten Kompressorfrekvens"
+          }
+        },
+        "frequency.allowed_compressor_min": {
+          "title": {
+            "en": "Allowed compressor frequency min",
+            "sv": "Tillåten Kompressorfrekvens min"
+          }
+        },
+        "frequency.current_compressor": {
+          "title": {
+            "en": "Current compressor frequency",
+            "sv": "Aktuell Kompressorfrekvens"
+          }
+        },
+        "blocked.addition": {
+          "title": {
+            "en": "Addition blocked",
+            "sv": "Tillsats blockerad"
+          }
+        },
+        "measure_current.addition_fuse_size": {
+          "title": {
+            "en": "Addition fuse size",
+            "sv": "Tillsats säkringsstorlek"
+          }
+        },
+        "time.addition_time_factor": {
+          "title": {
+            "en": "Addition time factor",
+            "sv": "Tillsats tidfaktor"
+          }
+        },
+        "measure_power.addition_electrical_addition_power": {
+          "title": {
+            "en": "Addition power",
+            "sv": "Tillsats effekt eltillsats"
+          }
+        },
+        "measure_power.addition_set_max_electrical_add": {
+          "title": {
+            "en": "Addition set max electrical add",
+            "sv": "Tillsats max inställd eltillsats"
+          }
+        },
+        "blocked.external": {
+          "title": {
+            "en": "External adjustment",
+            "sv": "Extern justering"
+          }
+        },
+        "measure_temperature.calculated_flow_temp": {
+          "title": {
+            "en": "Calculated flow temp",
+            "sv": "Beräknad framledning"
+          }
+        },
+        "measure_temperature.heat_medium_flow": {
+          "title": {
+            "en": "Forward temperature",
+            "sv": "Framledningstemp."
+          }
+        },
+        "counter.compressor_starts": {
+          "title": {
+            "en": "Compressor starts",
+            "sv": "Kompressorstarter"
+          }
+        },
+        "measure_current.phase_1": {
+          "title": {
+            "en": "Current phase 1",
+            "sv": "Ström fas 1"
+          }
+        },
+        "measure_current.phase_2": {
+          "title": {
+            "en": "Current phase 2",
+            "sv": "Ström fas 2"
+          }
+        },
+        "measure_current.phase_3": {
+          "title": {
+            "en": "Current phase 3",
+            "sv": "Ström fas 3"
+          }
+        },
+        "alarm_generic.system": {
+          "title": {
+            "en": "System alarm",
+            "sv": "System larm"
+          }
+        }
+      },
+      "images": {
+        "large": "/drivers/nibe/assets/images/large.png",
+        "small": "/drivers/nibe/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "login_oauth2",
+          "template": "login_oauth2"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_my_devices"
+          }
+         },
+         {
+           "id": "add_my_devices",
+           "template": "add_devices"
+         }
+      ]
+    }
+  ],
+  "flow": {
+    "triggers": [
+      {
+        "id": "measure_temperature.outside_changed",
+        "title": {
+          "en": "Outside temp changed",
+          "sv": "Utetemperatur ändrad"
+        },
+        "args": [
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "measure_temperature.inside_changed",
+        "title": {
+          "en": "Inside temp changed",
+          "sv": "Rumstemperatur ändrad"
+        },
+        "args": [
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "measure_temperature.hot_water_top_changed",
+        "title": {
+          "en": "Hot water top changed",
+          "sv": "Varmvatten topp ändrad"
+        },
+        "args": [
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "alarm_generic.system",
+        "title": {
+          "en": "Alarm state changed",
+          "sv": "Alarmstatus ändrad"
+        },
+        "args": [
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "hot_water_boost",
+        "title": {
+          "en": "Start temporary lux",
+          "sv": "Starta temporär lyx"
+        },
+        "args": [
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "On",
+                  "sv": "På"
+                }
+              },
+              {
+                "id": "0",
+                "label": {
+                  "en": "Off",
+                  "sv": "Av"
+                }
+              }
+            ]
+          },
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "ventilation_boost",
+        "title": {
+          "en": "Start a ventilation boost",
+          "sv": "Starta ventilation höjning"
+        },
+        "args": [
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "On",
+                  "sv": "På"
+                }
+              },
+              {
+                "id": "0",
+                "label": {
+                  "en": "Off",
+                  "sv": "Av"
+                }
+              }
+            ]
+          },
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      }
+    ]
+  }
+}

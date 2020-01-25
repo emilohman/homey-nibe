@@ -1,0 +1,14 @@
+{
+  "name": "se.emilohman.nibe",
+  "version": "1.0.0",
+  "description": "Adds support for Nibe heatpumps.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "homey-oauth2app": "^1.2.4"
+  }
+}
