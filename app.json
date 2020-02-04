@@ -11,7 +11,7 @@
     "en": "Adds support for Nibe heat pumps."
   },
   "tags": {
-    "en": [ "nibe", "heat pump", "climte" ]
+    "en": [ "nibe", "heat pump", "climate" ]
   },
   "category": [
     "climate"
@@ -179,6 +179,7 @@
         "blocked.external",
         "measure_temperature.calculated_flow_temp",
         "measure_temperature.heat_medium_flow",
+        "measure_temperature.external_flow_temp",
         "counter.compressor_starts",
         "measure_current.phase_1",
         "measure_current.phase_2",
@@ -187,10 +188,16 @@
       ],
       "capabilitiesOptions": {
         "onoff.hot_water_boost": {
-          "title": "Hot water boost"
+          "title": {
+            "en": "Hot water boost",
+            "sv": "Temporär lyx"
+          }
         },
         "onoff.ventilation_boost": {
-          "title": "Ventilation boost"
+          "title": {
+            "en": "Ventilation boost",
+            "sv": "Ventilation höjning"
+          }
         },
         "measure_temperature.outside": {
           "title": {
@@ -381,7 +388,13 @@
         "measure_temperature.heat_medium_flow": {
           "title": {
             "en": "Forward temperature",
-            "sv": "Framledningstemp."
+            "sv": "Framledningstemperatur"
+          }
+        },
+        "measure_temperature.external_flow_temp": {
+          "title": {
+            "en": "External flow temperature",
+            "sv": "Extern framledning"
           }
         },
         "counter.compressor_starts": {
@@ -487,6 +500,20 @@
         "title": {
           "en": "Alarm state changed",
           "sv": "Alarmstatus ändrad"
+        },
+        "args": [
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "compressor_starts",
+        "title": {
+          "en": "Compressor starts",
+          "sv": "Kompressor started"
         },
         "args": [
           {

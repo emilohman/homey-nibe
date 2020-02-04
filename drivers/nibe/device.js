@@ -92,7 +92,9 @@ const defaultParameters = {
     'capability': 'measure_temperature.avg_outside'
   },
   '40071': {
-    'key': 'system_1_external_flow_temp'
+    'key': 'system_1_external_flow_temp',
+    'divideBy': 10,
+    'capability': 'measure_temperature.external_flow_temp'
   },
   '40072': {
     'key': 'heat_meter_flow',
@@ -291,6 +293,9 @@ class NibeDevice extends OAuth2Device {
     async onOAuth2Init() {
       this.log('Initializing NibeDevice');
 
+      this.compressorStarts = 0;
+      this._flowTriggerCompressorStarts = new Homey.FlowCardTriggerDevice('compressor_starts').register();
+
       await this.initNibePremium();
 
       clearInterval(this.fetchIntervalIndex);
@@ -349,12 +354,27 @@ class NibeDevice extends OAuth2Device {
         if (parameter.capability) {
           this.setCapabilityValue(parameter.capability, parameter.value).then(() => {
             this.log('Setting: ' + parameter.capability + ' to: ' + parameter.value);
+
+            this.checkCompressorStartsFlow(parameter);
           }).catch((err) => {
             this.log('Error setting: ' + parameter.capability + ' to: ' + parameter.value);
             this.log(err);
           });
         }
       });
+    }
+
+    checkCompressorStartsFlow(parameter) {
+      if (parameter.key === 'cpr_info_ep14_compressor_starts') {
+        this.log('cpr_info_ep14_compressor_starts');
+        this.log(parameter.value, this.compressorStarts);
+
+        if (this.compressorStarts > 0 && parameter.value > this.compressorStarts) {
+          this._flowTriggerCompressorStarts.trigger(this);
+        }
+
+        this.compressorStarts = parameter.value;
+      }
     }
 
     async getParameters(id) {
@@ -383,6 +403,10 @@ class NibeDevice extends OAuth2Device {
 
           if (parameter.bool) {
             parameter.value = !!parameter.value;
+          }
+
+          if (parameter.rawValue === -32768) {
+            parameter.value = null;
           }
 
           params.push(parameter);
