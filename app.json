@@ -1,6 +1,6 @@
 {
   "id": "se.emilohman.nibe",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "compatibility": ">=2.1.2",
   "sdk": 2,
   "brandColor": "#A81525",

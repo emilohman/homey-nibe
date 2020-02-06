@@ -1,5 +1,8 @@
 {
   "0.0.1": {
     "en": "First release"
+  },
+  "0.0.2": {
+    "en": "New trigger flow when compressor starts. Minor fixes."
   }
 }
