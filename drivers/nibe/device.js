@@ -366,9 +366,6 @@ class NibeDevice extends OAuth2Device {
 
     checkCompressorStartsFlow(parameter) {
       if (parameter.key === 'cpr_info_ep14_compressor_starts') {
-        this.log('cpr_info_ep14_compressor_starts');
-        this.log(parameter.value, this.compressorStarts);
-
         if (this.compressorStarts > 0 && parameter.value > this.compressorStarts) {
           this._flowTriggerCompressorStarts.trigger(this);
         }
