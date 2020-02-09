@@ -17,7 +17,6 @@ class NibeApp extends OAuth2App {
 			authorizationUrl: `${NibeOAuth2Client.API_URL}/oauth/authorize`,
 			scopes: ['READSYSTEM', 'WRITESYSTEM'],
 		});
-
 	}
 }
 
