@@ -30,6 +30,10 @@
       {
         "name": "Emil Öhman",
         "email": "emilohman@gmail.com"
+      },
+      {
+        "name": "Martin Malmström",
+        "email": "martin.malmstrom11@gmail.com"
       }
     ]
   },
@@ -132,6 +136,39 @@
         "sv": "hz"
       },
       "icon": "/assets/frequency.svg"
+    },
+    "smart_home": {
+      "type": "enum",
+      "title": {
+        "en": "Smart home",
+        "sv": "Smart hem"
+      },
+      "values": [
+        {
+          "id": "home",
+          "title": {
+            "en": "Home",
+            "sv": "Hemma"
+          }
+        },
+        {
+          "id": "away",
+          "title": {
+            "en": "Away",
+            "sv": "Iväg"
+          }
+        },
+        {
+          "id": "vacation",
+          "title": {
+            "en": "Vacation",
+            "sv": "Semester"
+          }
+        }
+      ],
+      "uiComponent": null,
+      "getable": false,
+      "setable": false
     }
   },
   "drivers": [
@@ -143,6 +180,7 @@
       },
       "class": "heater",
       "capabilities": [
+        "smart_home.state",
         "onoff.dummy",
         "onoff.hot_water_boost",
         "onoff.ventilation_boost",
@@ -187,6 +225,12 @@
         "alarm_generic.system"
       ],
       "capabilitiesOptions": {
+        "smart_home.state": {
+          "title": {
+            "en": "Smart home state",
+            "sv": "Smart hem läge"
+          }
+        },
         "onoff.hot_water_boost": {
           "title": {
             "en": "Hot water boost",
@@ -634,6 +678,47 @@
             "step": 0.1,
             "label": "°C (measured temp)",
             "labelDecimals": 1
+          },
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "smart_home_mode",
+        "title": {
+          "en": "Set a smart home mode",
+          "sv": "Sätt smart hem läge"
+        },
+        "args": [
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "VACATION",
+                "label": {
+                  "en": "Vacation",
+                  "sv": "Semester"
+                }
+              },
+              {
+                "id": "AWAY_FROM_HOME",
+                "label": {
+                  "en": "Away",
+                  "sv": "Iväg"
+                }
+              },
+              {
+                "id": "DEFAULT_OPERATION",
+                "label": {
+                  "en": "Home",
+                  "sv": "Home"
+                }
+              }
+            ]
           },
           {
             "name": "nibe",

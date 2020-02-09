@@ -267,6 +267,11 @@ const defaultParameters = {
     'divideBy': 0,
     'bool': true,
     'capability': 'onoff.ventilation_boost'
+  },
+  '49001': {
+    'key': 'state',
+    'divideBy': 0,
+    'capability': 'smart_home.state'
   }
 };
 
@@ -311,6 +316,7 @@ class NibeDevice extends OAuth2Device {
     }
 
     async initNibePremium() {
+
       this.registerCapabilityListener("onoff.hot_water_boost", async value => {
         if (value) {
           await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': '1'});
@@ -331,6 +337,10 @@ class NibeDevice extends OAuth2Device {
         return Promise.resolve(true);
       });
 
+      this.registerCapabilityListener("smart_home.state", async value => {
+        await this.oAuth2Client.putSmartHomeMode(this.getData().id,  value);
+        return Promise.resolve(true);
+      });
 
       let hotWaterBoostAction = new Homey.FlowCardAction('hot_water_boost');
       hotWaterBoostAction.register().registerRunListener(async ( args, state ) => {
@@ -367,7 +377,13 @@ class NibeDevice extends OAuth2Device {
           }
         }
         return Promise.resolve(climate_systems);
-      })
+      });
+
+      let smartHomeModeAction = new Homey.FlowCardAction('smart_home_mode');
+      smartHomeModeAction.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putSmartHomeMode(this.getData().id, args.state);
+        return Promise.resolve( true );
+      });
     }
 
     async fetchData() {
@@ -446,7 +462,7 @@ class NibeDevice extends OAuth2Device {
         value: system.hasAlarmed,
         key: 99999
       };
-      const defaults = defaultParameters[parameter.key];
+      let defaults = defaultParameters[parameter.key];
       Object.assign(parameter, defaults);
 
       params.push(parameter);
@@ -469,6 +485,22 @@ class NibeDevice extends OAuth2Device {
 
         this.log(parameter.key + ': ' + parameter.value);
       }
+
+      // Get smart home mode
+      const smartHomeMode = await this.oAuth2Client.getSmartHomeMode(id);
+
+      const smartHomeParameter = {
+        value: smartHomeMode.mode,
+        key: 49001
+      };
+
+      defaults = defaultParameters[smartHomeParameter.key];
+
+      Object.assign(smartHomeParameter, defaults);
+
+      params.push(smartHomeParameter);
+
+      this.log(smartHomeParameter.key + ': ' + smartHomeParameter.value);
 
       return params;
     }
