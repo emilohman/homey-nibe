@@ -343,6 +343,31 @@ class NibeDevice extends OAuth2Device {
         await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': args.state});
         return Promise.resolve( true );
       });
+
+
+      let updateThermostatAction = new Homey.FlowCardAction('update_thermostat');
+      const categories = await this.oAuth2Client.getSystemCategories(this.getData().id);
+      updateThermostatAction.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.postSmartHomeThermostats(this.getData().id,
+            this.hashString(args.thermostat_name),
+            args.thermostat_name,
+            args.target_temperature,
+            args.measured_temperature,
+            args.climate_system.name);
+        return Promise.resolve( true );
+      })
+      .getArgument('climate_system')
+      .registerAutocompleteListener(( query, args ) => {
+        let climate_systems = [];
+
+        for (let i = 0, categoryLength = categories.length; i < categoryLength; i++) {
+          const category = categories[i];
+          if (category.categoryId.match(/SYSTEM_[0-8]/g)) {
+            climate_systems.push({"name": category.name});
+          }
+        }
+        return Promise.resolve(climate_systems);
+      })
     }
 
     async fetchData() {
@@ -446,6 +471,15 @@ class NibeDevice extends OAuth2Device {
       }
 
       return params;
+    }
+
+    hashString(str){
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash += Math.pow(str.charCodeAt(i) * 31, str.length - i);
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
     }
 }
 
