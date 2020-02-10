@@ -361,8 +361,8 @@ class NibeDevice extends OAuth2Device {
         await this.oAuth2Client.postSmartHomeThermostats(this.getData().id,
             this.hashString(args.thermostat_name),
             args.thermostat_name,
-            args.target_temperature,
             args.measured_temperature,
+            args.target_temperature,
             args.climate_system.name);
         return Promise.resolve( true );
       })
