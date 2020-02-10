@@ -267,6 +267,11 @@ const defaultParameters = {
     'divideBy': 0,
     'bool': true,
     'capability': 'onoff.ventilation_boost'
+  },
+  '49001': {
+    'key': 'state',
+    'divideBy': 0,
+    'capability': 'smart_home.state'
   }
 };
 
@@ -311,6 +316,7 @@ class NibeDevice extends OAuth2Device {
     }
 
     async initNibePremium() {
+
       this.registerCapabilityListener("onoff.hot_water_boost", async value => {
         if (value) {
           await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': '1'});
@@ -331,6 +337,10 @@ class NibeDevice extends OAuth2Device {
         return Promise.resolve(true);
       });
 
+      this.registerCapabilityListener("smart_home.state", async value => {
+        await this.oAuth2Client.putSmartHomeMode(this.getData().id,  value);
+        return Promise.resolve(true);
+      });
 
       let hotWaterBoostAction = new Homey.FlowCardAction('hot_water_boost');
       hotWaterBoostAction.register().registerRunListener(async ( args, state ) => {
@@ -341,6 +351,37 @@ class NibeDevice extends OAuth2Device {
       let ventilationBoostAction = new Homey.FlowCardAction('ventilation_boost');
       ventilationBoostAction.register().registerRunListener(async ( args, state ) => {
         await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': args.state});
+        return Promise.resolve( true );
+      });
+
+
+      let updateThermostatAction = new Homey.FlowCardAction('update_thermostat');
+      const categories = await this.oAuth2Client.getSystemCategories(this.getData().id);
+      updateThermostatAction.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.postSmartHomeThermostats(this.getData().id,
+            this.hashString(args.thermostat_name),
+            args.thermostat_name,
+            args.target_temperature,
+            args.measured_temperature,
+            args.climate_system.name);
+        return Promise.resolve( true );
+      })
+      .getArgument('climate_system')
+      .registerAutocompleteListener(( query, args ) => {
+        let climate_systems = [];
+
+        for (let i = 0, categoryLength = categories.length; i < categoryLength; i++) {
+          const category = categories[i];
+          if (category.categoryId.match(/SYSTEM_[0-8]/g)) {
+            climate_systems.push({"name": category.name});
+          }
+        }
+        return Promise.resolve(climate_systems);
+      });
+
+      let smartHomeModeAction = new Homey.FlowCardAction('smart_home_mode');
+      smartHomeModeAction.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putSmartHomeMode(this.getData().id, args.state);
         return Promise.resolve( true );
       });
     }
@@ -421,7 +462,7 @@ class NibeDevice extends OAuth2Device {
         value: system.hasAlarmed,
         key: 99999
       };
-      const defaults = defaultParameters[parameter.key];
+      let defaults = defaultParameters[parameter.key];
       Object.assign(parameter, defaults);
 
       params.push(parameter);
@@ -445,7 +486,32 @@ class NibeDevice extends OAuth2Device {
         this.log(parameter.key + ': ' + parameter.value);
       }
 
+      // Get smart home mode
+      const smartHomeMode = await this.oAuth2Client.getSmartHomeMode(id);
+
+      const smartHomeParameter = {
+        value: smartHomeMode.mode,
+        key: 49001
+      };
+
+      defaults = defaultParameters[smartHomeParameter.key];
+
+      Object.assign(smartHomeParameter, defaults);
+
+      params.push(smartHomeParameter);
+
+      this.log(smartHomeParameter.key + ': ' + smartHomeParameter.value);
+
       return params;
+    }
+
+    hashString(str){
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash += Math.pow(str.charCodeAt(i) * 31, str.length - i);
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
     }
 }
 
