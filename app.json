@@ -1,6 +1,6 @@
 {
   "id": "se.emilohman.nibe",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "compatibility": ">=2.1.2",
   "sdk": 2,
   "brandColor": "#A81525",
@@ -37,6 +37,17 @@
       }
     ]
   },
+  "contributing": {
+   "donate": {
+     "paypal": {
+       "username": "emilohman2"
+     }
+   }
+ },
+  "bugs": {
+    "url": "https://github.com/emilohman/homey-nibe/issues"
+  },
+  "source": "https://github.com/emilohman/homey-nibe",
   "capabilities": {
     "speed": {
       "type": "number",
