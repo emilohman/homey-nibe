@@ -4,5 +4,8 @@
   },
   "0.0.2": {
     "en": "New trigger flow when compressor starts. Minor fixes."
+  },
+  "1.0.0": {
+    "en": "Set smart home state home/away/vacation. Add/update thermostats."
   }
 }
