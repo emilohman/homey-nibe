@@ -1,6 +1,6 @@
 {
   "id": "se.emilohman.nibe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=2.1.2",
   "sdk": 2,
   "brandColor": "#A81525",
@@ -11,7 +11,11 @@
     "en": "Adds support for Nibe heat pumps."
   },
   "tags": {
-    "en": [ "nibe", "heat pump", "climate" ]
+    "en": [
+      "nibe",
+      "heat pump",
+      "climate"
+    ]
   },
   "category": [
     "climate"
@@ -38,12 +42,12 @@
     ]
   },
   "contributing": {
-   "donate": {
-     "paypal": {
-       "username": "emilohman2"
-     }
-   }
- },
+    "donate": {
+      "paypal": {
+        "username": "emilohman2"
+      }
+    }
+  },
   "bugs": {
     "url": "https://github.com/emilohman/homey-nibe/issues"
   },
@@ -498,11 +502,11 @@
           "navigation": {
             "next": "add_my_devices"
           }
-         },
-         {
-           "id": "add_my_devices",
-           "template": "add_devices"
-         }
+        },
+        {
+          "id": "add_my_devices",
+          "template": "add_devices"
+        }
       ]
     }
   ],

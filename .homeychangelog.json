@@ -7,5 +7,8 @@
   },
   "1.0.0": {
     "en": "Set smart home state home/away/vacation. Add/update thermostats."
+  },
+  "1.0.1": {
+    "en": "Fixed hot water boost and ventilation boost"
   }
 }
