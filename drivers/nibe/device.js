@@ -15,6 +15,19 @@ const defaultParameters = {
     'bool': true,
     'capability': 'blocked.compressor'
   },
+  '43561': {
+    'key': 'pool1_external_blocked',
+    'divideBy': 0,
+    'bool': true,
+    'capability': 'blocked.pool1'
+  },
+  '43152': {
+    'key': 'passive_cooling_external_blocked',
+    'divideBy': 0,
+    'bool': true,
+    'capability': 'blocked.passive_cooling'
+  },
+  
   '10033': {
     'key': 'addition_blocked',
     'divideBy': 0,
@@ -30,6 +43,48 @@ const defaultParameters = {
     'key': 'system_1_heat_medium_flow',
     'divideBy': 10,
     'capability': 'measure_temperature.heat_medium_flow'
+  },
+  '40042': {
+     'key' :'pool_temperature',
+     'divideBy' : 10,
+     'capability':'measure_temperature.pool1'
+  },  
+  '48090': {
+    'key' :'pool1_start_temp',
+    'divideBy' : 10,
+    'capability':'measure_temperature.pool1_start'
+  }, 
+  
+  '48092': {
+    'key' :'pool1_stop_temp',
+    'divideBy' : 10,
+    'capability':'measure_temperature.pool1_stop'
+  },
+  '43439': {
+    'key' :'brine_pump',
+    'divideBy' : 1,
+    'capability':'speed.brine_pump'
+  },
+  '40015': {
+    'key' :'brine_in',
+    'divideBy' : 10,
+    'capability':'measure_temperature.brine_in'
+  },
+  '40016': {
+    'key' :'brine_out',
+    'divideBy' : 10,
+    'capability':'measure_temperature.brine_out'
+  },      
+  '44270': {
+    'key' :'passive_cooling_2_pipe_calculated_flow_temp',
+    'divideBy' : 10,
+    'capability':'measure_temperature.passive_cooling_calculated_flow_temp'
+  },
+  '47276': {
+    'key' :'Floor drying',
+    'divideBy' : 1,
+    'bool' : true,
+    'capability':'onoff.floor_drying'
   },
   '40012': {
     'key': 'cpr_info_ep14_condenser_return',
@@ -423,7 +478,8 @@ class NibeDevice extends OAuth2Device {
       for (let i = 0, categoryLength = categories.length; i < categoryLength; i++) {
         const category = categories[i];
         const parameters = await this.oAuth2Client.getCategoryParameters(id, category.categoryId);
-
+        
+        this.log(category.categoryId + ':' + category.name);
         for (let j = 0, length = parameters.length; j < length; j++) {
           const parameter = parameters[j];
           const name = parameter.parameterId || (category.categoryId + '_' + parameter.title.split(/[^a-z]+/gi).join('_')).toLowerCase().replace(/[_]+$/, '');
@@ -450,7 +506,8 @@ class NibeDevice extends OAuth2Device {
           params.push(parameter);
 
           if (!parameter.capability) {
-            this.log(parameter.key + ': ' + parameter.value);
+            this.log(parameter.key + ': ' + parameter.value + ' ' + name );
+            this.log(category.categoryId + ' ' + parameter.title + ': ' + parameter.designation + ' ' + parameter.unit  );
           }
         };
       };
