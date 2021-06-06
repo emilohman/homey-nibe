@@ -225,6 +225,8 @@
         "frequency.allowed_compressor_min",
         "frequency.current_compressor",
         "blocked.addition",
+        "blocked.pool1",
+        "blocked.passive_cooling",
         "measure_current.addition_fuse_size",
         "time.addition_time_factor",
         "measure_power.addition_electrical_addition_power",
@@ -232,6 +234,14 @@
         "blocked.external",
         "measure_temperature.calculated_flow_temp",
         "measure_temperature.heat_medium_flow",
+        "measure_temperature.pool1",
+        "measure_temperature.pool1_start",
+        "measure_temperature.pool1_stop",
+        "speed.brine_pump",
+        "measure_temperature.brine_in",
+        "measure_temperature.brine_out",
+        "measure_temperature.calculated_flow_temp",
+        "onoff.floor_drying",
         "measure_temperature.external_flow_temp",
         "counter.compressor_starts",
         "measure_current.phase_1",
@@ -408,6 +418,18 @@
             "sv": "Tillsats blockerad"
           }
         },
+        "blocked.pool1": {
+          "title": {
+            "en": "Pool1 external blocked",
+            "sv": "Pool1 external blockerad"
+          }
+        },
+        "blocked.passive_cooling": {
+          "title": {
+            "en": "Passive cooling external blocked",
+            "sv": "Passive cooling external blockerad"
+          }
+        },
         "measure_current.addition_fuse_size": {
           "title": {
             "en": "Addition fuse size",
@@ -444,10 +466,60 @@
             "sv": "Beräknad framledning"
           }
         },
+        "measure_temperature.passive_cooling_calculated_flow_temp": {
+          "title": {
+            "en": "Passive cooling 2 pipe calculated flow temperature",
+            "sv": "Passive cooling 2 pipe calculated flow temperatur"
+          }
+        },
+        
+
         "measure_temperature.heat_medium_flow": {
           "title": {
             "en": "Forward temperature",
             "sv": "Framledningstemperatur"
+          }
+        },
+        "measure_temperature.pool1": {
+          "title": {
+            "en": "Pool 1 temperature",
+            "sv": "Pool 1 temperatur"
+          }
+        },
+        "measure_temperature.pool1_start": {
+          "title": {
+            "en": "Pool 1 start temperature",
+            "sv": "Pool 1 start temperatur"
+          }
+        },
+        "measure_temperature.pool1_stop": {
+          "title": {
+            "en": "Pool 1 stop temperature",
+            "sv": "Pool 1 stop temperatur"
+          }
+        },
+        "speed.brine_pump": {
+          "title": {
+            "en": "Brine Pump Speed",
+            "sv": "Brine Pump Speed"
+          }
+        },
+        "measure_temperature.brine_in": {
+          "title": {
+            "en": "Brine In temperature",
+            "sv": "Brine In temperatur"
+          }
+        },
+        "measure_temperature.brine_out": {
+          "title": {
+            "en": "Brine Out temperature",
+            "sv": "Brine Out temperatur"
+          }
+        },
+        "onoff.floor_drying": {
+          "title": {
+            "en": "Floor Drying",
+            "sv": "Floor Drying"
           }
         },
         "measure_temperature.external_flow_temp": {
