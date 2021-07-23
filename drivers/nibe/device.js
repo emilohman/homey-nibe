@@ -353,6 +353,8 @@ class NibeDevice extends OAuth2Device {
     async onOAuth2Init() {
       this.log('Initializing NibeDevice');
 
+      await this.checkCapabilities();
+
       this.compressorStarts = 0;
       this._flowTriggerCompressorStarts = new Homey.FlowCardTriggerDevice('compressor_starts').register();
 
@@ -562,13 +564,55 @@ class NibeDevice extends OAuth2Device {
       return params;
     }
 
-    hashString(str){
+    hashString(str) {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
         hash += Math.pow(str.charCodeAt(i) * 31, str.length - i);
         hash = hash & hash; // Convert to 32bit integer
       }
       return hash;
+    }
+
+    async checkCapabilities() {
+      if (!this.hasCapability('blocked.pool1')) {
+        await this.addCapability('blocked.pool1');
+      }
+
+      if (!this.hasCapability('blocked.passive_cooling')) {
+        await this.addCapability('blocked.passive_cooling');
+      }
+
+      if (!this.hasCapability('measure_temperature.pool1')) {
+        await this.addCapability('measure_temperature.pool1');
+      }
+
+      if (!this.hasCapability('measure_temperature.pool1_start')) {
+        await this.addCapability('measure_temperature.pool1_start');
+      }
+
+      if (!this.hasCapability('measure_temperature.pool1_stop')) {
+        await this.addCapability('measure_temperature.pool1_stop');
+      }
+
+      if (!this.hasCapability('speed.brine_pump')) {
+        await this.addCapability('speed.brine_pump');
+      }
+
+      if (!this.hasCapability('measure_temperature.brine_in')) {
+        await this.addCapability('measure_temperature.brine_in');
+      }
+
+      if (!this.hasCapability('measure_temperature.brine_out')) {
+        await this.addCapability('measure_temperature.brine_out');
+      }
+
+      if (!this.hasCapability('measure_temperature.calculated_flow_temp')) {
+        await this.addCapability('measure_temperature.calculated_flow_temp');
+      }
+
+      if (!this.hasCapability('onoff.floor_drying')) {
+        await this.addCapability('onoff.floor_drying');
+      }
     }
 }
 
