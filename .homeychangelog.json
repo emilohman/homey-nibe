@@ -10,5 +10,8 @@
   },
   "1.0.1": {
     "en": "Fixed hot water boost and ventilation boost"
+  },
+  "1.1.0": {
+    "en": "Adding pool and passive cooling brine"
   }
 }
