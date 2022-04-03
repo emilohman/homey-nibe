@@ -283,20 +283,32 @@ const defaultParameters = {
   '47407': {
     'key': 'aux_in_out_aux_1',
     'divideBy': 0
+    'bool': true,
+    'capability': 'onoff.aux_in_out_aux_1'
   },
   '47408': {
     'key': 'aux_in_out_aux_2'
+    'divideBy': 0
+    'bool': true,
+    'capability': 'onoff.aux_in_out_aux_2'
   },
   '47409': {
     'key': 'aux_in_out_aux_3'
+    'divideBy': 0
+    'bool': true,
+    'capability': 'onoff.aux_in_out_aux_3'
   },
   '47410': {
     'key': 'aux_in_out_aux_4',
     'divideBy': 0
+    'bool': true,
+    'capability': 'onoff.aux_in_out_aux_4'
   },
   '47411': {
     'key': 'aux_in_out_aux_5',
-    'divideBy': 0
+    'divideBy': 0    
+    'bool': true,
+    'capability': 'onoff.aux_in_out_aux_5'
   },
   '47412': {
     'key': 'aux_in_out_x',
@@ -410,7 +422,105 @@ class NibeDevice extends OAuth2Device {
         await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': args.state});
         return Promise.resolve( true );
       });
+      });
 
+      this.registerCapabilityListener("onoff.aux_in_out_aux_1", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_1': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_1': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+
+      });
+
+      this.registerCapabilityListener("onoff.aux_in_out_aux_2", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_2': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_2': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+
+      });
+
+      this.registerCapabilityListener("onoff.aux_in_out_aux_3", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_3': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_3': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+
+      });
+
+      this.registerCapabilityListener("onoff.aux_in_out_aux_4", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_4': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_4': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+
+      });
+
+      this.registerCapabilityListener("onoff.aux_in_out_aux_5", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_5': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_5': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+
+      });
+
+      let AUX_1Action = new Homey.FlowCardAction('aux_in_out_aux_1');
+      AUX_1Action.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_1': args.state});
+        return Promise.resolve( true );
+      });
+
+      });
+
+      let AUX_2Action = new Homey.FlowCardAction('aux_in_out_aux_2');
+      AUX_2Action.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_2': args.state});
+        return Promise.resolve( true );
+      });
+
+      });
+
+      let AUX_3Action = new Homey.FlowCardAction('aux_in_out_aux_3');
+      AUX_3Action.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_3': args.state});
+        return Promise.resolve( true );
+      });
+
+      });
+
+      let AUX_4Action = new Homey.FlowCardAction('aux_in_out_aux_4');
+      AUX_4Action.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_4': args.state});
+        return Promise.resolve( true );
+      });
+
+      });
+
+      let AUX_5Action = new Homey.FlowCardAction('aux_in_out_aux_5');
+      AUX_5Action.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'aux_in_out_aux_5': args.state});
+        return Promise.resolve( true );
+      });
 
       let updateThermostatAction = new Homey.FlowCardAction('update_thermostat');
       const categories = await this.oAuth2Client.getSystemCategories(this.getData().id);
@@ -529,7 +639,7 @@ class NibeDevice extends OAuth2Device {
       this.log(parameter.key + ': ' + parameter.value);
 
       // Get boost parameters
-      const boostParameters = await this.oAuth2Client.getSystemParameters(id, {parameterIds: ['hot_water_boost', 'ventilation_boost']});
+      const boostParameters = await this.oAuth2Client.getSystemParameters(id, {parameterIds: ['hot_water_boost', 'ventilation_boost', 'aux_in_out_aux_1', 'aux_in_out_aux_2', 'aux_in_out_aux_3', 'aux_in_out_aux_4', 'aux_in_out_aux_5']});
 
       for (let k = 0, length = boostParameters.length; k < length; k++) {
         const parameter = boostParameters[k];
