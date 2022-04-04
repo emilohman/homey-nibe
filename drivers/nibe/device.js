@@ -323,6 +323,18 @@ const defaultParameters = {
     'bool': true,
     'capability': 'onoff.ventilation_boost'
   },
+  '47370': {
+    'key': 'additional_heat',
+    'divideBy': 0,
+    'bool': true,
+    'capability': 'onoff.additional_heat'
+  },
+    '47371': {
+    'key': 'heat',
+    'divideBy': 0,
+    'bool': true,
+    'capability': 'onoff.heat'
+  },
   '49001': {
     'key': 'state',
     'divideBy': 0,
@@ -394,6 +406,26 @@ class NibeDevice extends OAuth2Device {
         return Promise.resolve(true);
       });
 
+      this.registerCapabilityListener("onoff.additional_heat", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'additional_heat': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'additional_heat': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+      
+      this.registerCapabilityListener("onoff.heat", async value => {
+        if (value) {
+          await this.oAuth2Client.putParameters(this.getData().id, {'heat': '1'});
+        } else {
+          await this.oAuth2Client.putParameters(this.getData().id, {'heat': '0'});
+        }
+
+        return Promise.resolve(true);
+      });
+      
       this.registerCapabilityListener("smart_home.state", async value => {
         await this.oAuth2Client.putSmartHomeMode(this.getData().id,  value);
         return Promise.resolve(true);
@@ -411,7 +443,18 @@ class NibeDevice extends OAuth2Device {
         return Promise.resolve( true );
       });
 
+      let additionalHeatAction = new Homey.FlowCardAction('additional_heat');
+      additionalHeatAction.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'additional_heat': args.state});
+        return Promise.resolve( true );
+      });
 
+      let HeatAction = new Homey.FlowCardAction('heat');
+      HeatAction.register().registerRunListener(async ( args, state ) => {
+        await this.oAuth2Client.putParameters(this.getData().id, {'heat': args.state});
+        return Promise.resolve( true );
+      });
+      
       let updateThermostatAction = new Homey.FlowCardAction('update_thermostat');
       const categories = await this.oAuth2Client.getSystemCategories(this.getData().id);
       updateThermostatAction.register().registerRunListener(async ( args, state ) => {
@@ -529,7 +572,7 @@ class NibeDevice extends OAuth2Device {
       this.log(parameter.key + ': ' + parameter.value);
 
       // Get boost parameters
-      const boostParameters = await this.oAuth2Client.getSystemParameters(id, {parameterIds: ['hot_water_boost', 'ventilation_boost']});
+      const boostParameters = await this.oAuth2Client.getSystemParameters(id, {parameterIds: ['hot_water_boost', 'ventilation_boost', 'additional_heat', 'heat']});
 
       for (let k = 0, length = boostParameters.length; k < length; k++) {
         const parameter = boostParameters[k];
