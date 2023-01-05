@@ -356,8 +356,8 @@ class NibeDevice extends OAuth2Device {
 
       this.compressorStarts = 0;
       this.additionPower = 0;
-      this._flowTriggerCompressorStarts = this.homey.flow.getTriggerCard('compressor_starts');
-      this._flowTriggerAdditionPowerChanged = this.homey.flow.getTriggerCard('addition_power_changed');
+      this._flowTriggerCompressorStarts = this.homey.flow.getDeviceTriggerCard('compressor_starts');
+      this._flowTriggerAdditionPowerChanged = this.homey.flow.getDeviceTriggerCard('addition_changed');
 
       await this.initNibePremium();
 
@@ -467,7 +467,7 @@ class NibeDevice extends OAuth2Device {
     checkCompressorStartsFlow(parameter, isInitFetch) {
       if (parameter.key === 'cpr_info_ep14_compressor_starts') {
         if (!isInitFetch && this.compressorStarts > 0 && parameter.value > this.compressorStarts) {
-          this._flowTriggerCompressorStarts.trigger(this);
+          this._flowTriggerCompressorStarts.trigger(this).catch(this.error);
         }
 
         this.compressorStarts = parameter.value;
@@ -477,7 +477,7 @@ class NibeDevice extends OAuth2Device {
     checkAdditionPowerChangedFlow(parameter, isInitFetch) {
       if (parameter.key === 'addition_electrical_addition_power') {
         if (!isInitFetch && parameter.value !== this.additionPower) {
-          this._flowTriggerAdditionPowerChanged.trigger(this);
+          this._flowTriggerAdditionPowerChanged.trigger(this).catch(this.error);
         }
 
         this.additionPower = parameter.value;
