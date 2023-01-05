@@ -13,5 +13,8 @@
   },
   "1.1.0": {
     "en": "Adding pool and passive cooling brine"
+  },
+  "1.2.0": {
+    "en": "Added support for Homey Pro (Early 2023). Added additionPowerChanged trigger. Minor fixes."
   }
 }
