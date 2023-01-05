@@ -1,6 +1,6 @@
 {
   "id": "se.emilohman.nibe",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#A81525",
@@ -659,7 +659,7 @@
         ]
       },
       {
-        "id": "addition_power_changed",
+        "id": "addition_changed",
         "title": {
           "en": "Addition power changed",
           "sv": "Tillsats effekt ändras"
