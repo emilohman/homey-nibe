@@ -2,23 +2,16 @@
 
 'use strict';
 
-const Homey = require('homey');
 const { OAuth2App } = require('homey-oauth2app');
 const NibeOAuth2Client = require('./lib/NibeOAuth2Client');
 
 class NibeApp extends OAuth2App {
+	static OAUTH2_CLIENT = NibeOAuth2Client;
+	static OAUTH2_DEBUG = false;
+	static OAUTH2_MULTI_SESSION = true;
+	static OAUTH2_DRIVERS = ['nibe'];
 
   onOAuth2Init() {
-		//this.enableOAuth2Debug();
-
-		this.setOAuth2Config({
-			apiUrl: NibeOAuth2Client.API_URL,
-			client: NibeOAuth2Client,
-			tokenUrl: `${NibeOAuth2Client.API_URL}/oauth/token`,
-			authorizationUrl: `${NibeOAuth2Client.API_URL}/oauth/authorize`,
-			scopes: ['READSYSTEM', 'WRITESYSTEM'],
-			allowMultiSession: true
-		});
 
 	}
 }

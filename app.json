@@ -1,8 +1,8 @@
 {
   "id": "se.emilohman.nibe",
   "version": "1.1.0",
-  "compatibility": ">=2.1.2",
-  "sdk": 2,
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
   "brandColor": "#A81525",
   "name": {
     "en": "Nibe"
@@ -65,7 +65,8 @@
       "units": {
         "en": "%"
       },
-      "icon": "/assets/velocity.svg"
+      "icon": "/assets/velocity.svg",
+      "insights": true
     },
     "percentage": {
       "type": "number",
@@ -79,7 +80,8 @@
       "units": {
         "en": "%"
       },
-      "icon": "/assets/percentage.svg"
+      "icon": "/assets/percentage.svg",
+      "insights": true
     },
     "degree_minutes": {
       "type": "number",
@@ -95,7 +97,8 @@
         "en": "DM",
         "sv": "GM"
       },
-      "icon": "/assets/degree_minutes.svg"
+      "icon": "/assets/degree_minutes.svg",
+      "insights": true
     },
     "blocked": {
       "type": "boolean",
@@ -118,7 +121,8 @@
       "chartType": "spline",
       "getable": true,
       "setable": false,
-      "icon": "/assets/counter.svg"
+      "icon": "/assets/counter.svg",
+      "insights": true
     },
     "time": {
       "type": "number",
@@ -134,7 +138,8 @@
         "en": "h",
         "sv": "h"
       },
-      "icon": "/assets/time.svg"
+      "icon": "/assets/time.svg",
+      "insights": true
     },
     "frequency": {
       "type": "number",
@@ -150,7 +155,8 @@
         "en": "hz",
         "sv": "hz"
       },
-      "icon": "/assets/frequency.svg"
+      "icon": "/assets/frequency.svg",
+      "insights": true
     },
     "smart_home": {
       "type": "enum",
@@ -642,7 +648,21 @@
         "id": "compressor_starts",
         "title": {
           "en": "Compressor starts",
-          "sv": "Kompressor started"
+          "sv": "Kompressor startar"
+        },
+        "args": [
+          {
+            "name": "nibe",
+            "type": "device",
+            "filter": "driver_id=nibe"
+          }
+        ]
+      },
+      {
+        "id": "addition_power_changed",
+        "title": {
+          "en": "Addition power changed",
+          "sv": "Tillsats effekt ändras"
         },
         "args": [
           {

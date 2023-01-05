@@ -1,6 +1,5 @@
 'use strict';
 
-const Homey = require('homey');
 const { OAuth2Device, OAuth2Token, OAuth2Util } = require('homey-oauth2app');
 
 const defaultParameters = {
@@ -27,7 +26,7 @@ const defaultParameters = {
     'bool': true,
     'capability': 'blocked.passive_cooling'
   },
-  
+
   '10033': {
     'key': 'addition_blocked',
     'divideBy': 0,
@@ -48,13 +47,13 @@ const defaultParameters = {
      'key' :'pool_temperature',
      'divideBy' : 10,
      'capability':'measure_temperature.pool1'
-  },  
+  },
   '48090': {
     'key' :'pool1_start_temp',
     'divideBy' : 10,
     'capability':'measure_temperature.pool1_start'
-  }, 
-  
+  },
+
   '48092': {
     'key' :'pool1_stop_temp',
     'divideBy' : 10,
@@ -74,7 +73,7 @@ const defaultParameters = {
     'key' :'brine_out',
     'divideBy' : 10,
     'capability':'measure_temperature.brine_out'
-  },      
+  },
   '44270': {
     'key' :'passive_cooling_2_pipe_calculated_flow_temp',
     'divideBy' : 10,
@@ -156,9 +155,9 @@ const defaultParameters = {
     'divideBy': 10
   },
   '40079': {
-    'key': 'status_current_1',
+    'key': 'status_current_3',
     'divideBy': 10,
-    'capability': 'measure_current.phase_1'
+    'capability': 'measure_current.phase_3'
   },
   '40081': {
     'key': 'status_current_2',
@@ -166,9 +165,9 @@ const defaultParameters = {
     'capability': 'measure_current.phase_2'
   },
   '40083': {
-    'key': 'status_current_3',
+    'key': 'status_current_1',
     'divideBy': 10,
-    'capability': 'measure_current.phase_3'
+    'capability': 'measure_current.phase_1'
   },
   '40101': {
     'key': 'outdoor_air_mix_incoming_air_temp',
@@ -200,7 +199,7 @@ const defaultParameters = {
   },
   '43084': {
     'key': 'addition_electrical_addition_power',
-    'divideBy': 10,
+    'divideBy': 0.1,
     'capability': 'measure_power.addition_electrical_addition_power'
   },
   '43122': {
@@ -272,7 +271,7 @@ const defaultParameters = {
   },
   '47212': {
     'key': 'addition_set_max_electrical_add',
-    'divideBy': 100,
+    'divideBy': 0.1,
     'capability': 'measure_power.addition_set_max_electrical_add'
   },
   '47214': {
@@ -356,17 +355,19 @@ class NibeDevice extends OAuth2Device {
       await this.checkCapabilities();
 
       this.compressorStarts = 0;
-      this._flowTriggerCompressorStarts = new Homey.FlowCardTriggerDevice('compressor_starts').register();
+      this.additionPower = 0;
+      this._flowTriggerCompressorStarts = this.homey.flow.getTriggerCard('compressor_starts');
+      this._flowTriggerAdditionPowerChanged = this.homey.flow.getTriggerCard('addition_power_changed');
 
       await this.initNibePremium();
 
       clearInterval(this.fetchIntervalIndex);
       this.fetchIntervalIndex = setInterval(async () => {
-        await this.fetchData();
+        await this.fetchData(false);
       }, 1000 * 60 * 1);
 
       try {
-        await this.fetchData();
+        await this.fetchData(true);
       } catch(error) {
         this.log(error);
       }
@@ -399,22 +400,22 @@ class NibeDevice extends OAuth2Device {
         return Promise.resolve(true);
       });
 
-      let hotWaterBoostAction = new Homey.FlowCardAction('hot_water_boost');
-      hotWaterBoostAction.register().registerRunListener(async ( args, state ) => {
+      let hotWaterBoostAction = this.homey.flow.getActionCard('hot_water_boost');
+      hotWaterBoostAction.registerRunListener(async ( args, state ) => {
         await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': args.state});
         return Promise.resolve( true );
       });
 
-      let ventilationBoostAction = new Homey.FlowCardAction('ventilation_boost');
-      ventilationBoostAction.register().registerRunListener(async ( args, state ) => {
+      let ventilationBoostAction = this.homey.flow.getActionCard('ventilation_boost');
+      ventilationBoostAction.registerRunListener(async ( args, state ) => {
         await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': args.state});
         return Promise.resolve( true );
       });
 
 
-      let updateThermostatAction = new Homey.FlowCardAction('update_thermostat');
+      let updateThermostatAction = this.homey.flow.getActionCard('update_thermostat');
       const categories = await this.oAuth2Client.getSystemCategories(this.getData().id);
-      updateThermostatAction.register().registerRunListener(async ( args, state ) => {
+      updateThermostatAction.registerRunListener(async ( args, state ) => {
         await this.oAuth2Client.postSmartHomeThermostats(this.getData().id,
             this.hashString(args.thermostat_name),
             args.thermostat_name,
@@ -436,14 +437,14 @@ class NibeDevice extends OAuth2Device {
         return Promise.resolve(climate_systems);
       });
 
-      let smartHomeModeAction = new Homey.FlowCardAction('smart_home_mode');
-      smartHomeModeAction.register().registerRunListener(async ( args, state ) => {
+      let smartHomeModeAction = this.homey.flow.getActionCard('smart_home_mode');
+      smartHomeModeAction.registerRunListener(async ( args, state ) => {
         await this.oAuth2Client.putSmartHomeMode(this.getData().id, args.state);
         return Promise.resolve( true );
       });
     }
 
-    async fetchData() {
+    async fetchData(isInitFetch) {
       const data = this.getData();
 
       const parameters = await this.getParameters(data.id);
@@ -453,7 +454,8 @@ class NibeDevice extends OAuth2Device {
           this.setCapabilityValue(parameter.capability, parameter.value).then(() => {
             this.log('Setting: ' + parameter.capability + ' to: ' + parameter.value);
 
-            this.checkCompressorStartsFlow(parameter);
+            this.checkCompressorStartsFlow(parameter, isInitFetch);
+            this.checkAdditionPowerChangedFlow(parameter, isInitFetch);
           }).catch((err) => {
             this.log('Error setting: ' + parameter.capability + ' to: ' + parameter.value);
             this.log(err);
@@ -462,13 +464,23 @@ class NibeDevice extends OAuth2Device {
       });
     }
 
-    checkCompressorStartsFlow(parameter) {
+    checkCompressorStartsFlow(parameter, isInitFetch) {
       if (parameter.key === 'cpr_info_ep14_compressor_starts') {
-        if (this.compressorStarts > 0 && parameter.value > this.compressorStarts) {
+        if (!isInitFetch && this.compressorStarts > 0 && parameter.value > this.compressorStarts) {
           this._flowTriggerCompressorStarts.trigger(this);
         }
 
         this.compressorStarts = parameter.value;
+      }
+    }
+
+    checkAdditionPowerChangedFlow(parameter, isInitFetch) {
+      if (parameter.key === 'addition_electrical_addition_power') {
+        if (!isInitFetch && parameter.value !== this.additionPower) {
+          this._flowTriggerAdditionPowerChanged.trigger(this);
+        }
+
+        this.additionPower = parameter.value;
       }
     }
 
@@ -480,7 +492,7 @@ class NibeDevice extends OAuth2Device {
       for (let i = 0, categoryLength = categories.length; i < categoryLength; i++) {
         const category = categories[i];
         const parameters = await this.oAuth2Client.getCategoryParameters(id, category.categoryId);
-        
+
         this.log(category.categoryId + ':' + category.name);
         for (let j = 0, length = parameters.length; j < length; j++) {
           const parameter = parameters[j];
