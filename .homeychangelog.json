@@ -22,5 +22,8 @@
   },
   "1.2.2": {
     "en": "Added support for Homey Pro (Early 2023). Added additionPowerChanged trigger. Minor fixes."
+  },
+  "1.2.3": {
+    "en": "Stability improvements"
   }
 }
