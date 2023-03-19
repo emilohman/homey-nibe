@@ -376,53 +376,81 @@ class NibeDevice extends OAuth2Device {
     async initNibePremium() {
 
       this.registerCapabilityListener("onoff.hot_water_boost", async value => {
-        if (value) {
-          await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': '1'});
-        } else {
-          await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': '0'});
+        try {
+          if (value) {
+            await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': '1'});
+          } else {
+            await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': '0'});
+          }
+        } catch (error) {
+          this.error('Error onoff.hot_water_boost', error);
         }
 
-        return Promise.resolve(true);
+        return true;
       });
 
       this.registerCapabilityListener("onoff.ventilation_boost", async value => {
-        if (value) {
-          await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': '1'});
-        } else {
-          await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': '0'});
+        try {
+          if (value) {
+            await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': '1'});
+          } else {
+            await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': '0'});
+          }
+        } catch (error) {
+          this.error('Error onoff.ventilation_boost', error);
         }
 
-        return Promise.resolve(true);
+        return true;
       });
 
       this.registerCapabilityListener("smart_home.state", async value => {
-        await this.oAuth2Client.putSmartHomeMode(this.getData().id,  value);
-        return Promise.resolve(true);
+        try {
+          await this.oAuth2Client.putSmartHomeMode(this.getData().id, value);
+        } catch (error) {
+          this.error('Error smart_home.state', error);
+        }
+
+        return true;
       });
 
       let hotWaterBoostAction = this.homey.flow.getActionCard('hot_water_boost');
       hotWaterBoostAction.registerRunListener(async ( args, state ) => {
-        await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': args.state});
-        return Promise.resolve( true );
+        try {
+          await this.oAuth2Client.putParameters(this.getData().id, {'hot_water_boost': args.state});
+        } catch (error) {
+          this.error('Error hot_water_boost', error);
+        }
+
+        return true;
       });
 
       let ventilationBoostAction = this.homey.flow.getActionCard('ventilation_boost');
       ventilationBoostAction.registerRunListener(async ( args, state ) => {
-        await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': args.state});
-        return Promise.resolve( true );
+        try {
+          await this.oAuth2Client.putParameters(this.getData().id, {'ventilation_boost': args.state});
+        } catch (error) {
+          this.error('Error ventilation_boost', error);
+        }
+
+        return true;
       });
 
 
       let updateThermostatAction = this.homey.flow.getActionCard('update_thermostat');
       const categories = await this.oAuth2Client.getSystemCategories(this.getData().id);
       updateThermostatAction.registerRunListener(async ( args, state ) => {
-        await this.oAuth2Client.postSmartHomeThermostats(this.getData().id,
-            this.hashString(args.thermostat_name),
-            args.thermostat_name,
-            args.measured_temperature,
-            args.target_temperature,
-            args.climate_system.name);
-        return Promise.resolve( true );
+        try {
+          await this.oAuth2Client.postSmartHomeThermostats(this.getData().id,
+              this.hashString(args.thermostat_name),
+              args.thermostat_name,
+              args.measured_temperature,
+              args.target_temperature,
+              args.climate_system.name);
+        } catch (error) {
+          this.error('Error update_thermostat', error);
+        }
+
+        return true;
       })
       .getArgument('climate_system')
       .registerAutocompleteListener(( query, args ) => {
@@ -439,29 +467,37 @@ class NibeDevice extends OAuth2Device {
 
       let smartHomeModeAction = this.homey.flow.getActionCard('smart_home_mode');
       smartHomeModeAction.registerRunListener(async ( args, state ) => {
-        await this.oAuth2Client.putSmartHomeMode(this.getData().id, args.state);
-        return Promise.resolve( true );
+        try {
+          await this.oAuth2Client.putSmartHomeMode(this.getData().id, args.state);
+        } catch (error) {
+          this.error('Error smart_home_mode', error);
+        }
+        return true;
       });
     }
 
     async fetchData(isInitFetch) {
-      const data = this.getData();
+      try {
+        const data = this.getData();
 
-      const parameters = await this.getParameters(data.id);
+        const parameters = await this.getParameters(data.id);
 
-      parameters.forEach((parameter) => {
-        if (parameter.capability) {
-          this.setCapabilityValue(parameter.capability, parameter.value).then(() => {
-            this.log('Setting: ' + parameter.capability + ' to: ' + parameter.value);
+        parameters.forEach((parameter) => {
+          if (parameter.capability) {
+            this.setCapabilityValue(parameter.capability, parameter.value).then(() => {
+              this.log('Setting: ' + parameter.capability + ' to: ' + parameter.value);
 
-            this.checkCompressorStartsFlow(parameter, isInitFetch);
-            this.checkAdditionPowerChangedFlow(parameter, isInitFetch);
-          }).catch((err) => {
-            this.log('Error setting: ' + parameter.capability + ' to: ' + parameter.value);
-            this.log(err);
-          });
-        }
-      });
+              this.checkCompressorStartsFlow(parameter, isInitFetch);
+              this.checkAdditionPowerChangedFlow(parameter, isInitFetch);
+            }).catch((err) => {
+              this.log('Error setting: ' + parameter.capability + ' to: ' + parameter.value);
+              this.log(err);
+            });
+          }
+        });
+      } catch (error) {
+        this.error('Error fetchData', error);
+      }
     }
 
     checkCompressorStartsFlow(parameter, isInitFetch) {

@@ -246,7 +246,6 @@
         "speed.brine_pump",
         "measure_temperature.brine_in",
         "measure_temperature.brine_out",
-        "measure_temperature.calculated_flow_temp",
         "onoff.floor_drying",
         "measure_temperature.external_flow_temp",
         "counter.compressor_starts",
